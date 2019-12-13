@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Trading Page</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<h1 style="padding-top:10px;padding-bottom:10px; color: rgb(40, 40, 40);"> Supply Chain Financing System</h1>
+
+<div>
+    <div class="container">
+        <h1>签发单据</h1>
+        <div class="" style="margin-top: 10px;margin-left: 1%">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="ReceiptID">账单ID</label>
+                <input type="text" class="form-control inputSize" id="ReceiptID" placeholder="id">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="ComAddr">买方公钥</label>
+                <input type="text" class="form-control inputSize" id="ComAddr" placeholder="addr">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="SellerAddr">卖方公钥</label>
+                <input type="text" class="form-control inputSize" id="SellerAddr" placeholder="addr">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="SellTime">交易时间</label>
+                <input type="text" class="form-control inputSize" id="SellTime" placeholder="sell time">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="ExpireTime">应还时间</label>
+                <input type="text" class="form-control inputSize" id="ExpireTime" placeholder="expire time">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="money">交易金额</label>
+                <input type="text" class="form-control inputSize" id="money" placeholder="money">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="status">是否担保</label>
+                <select class="form-control inputSize" id="status">
+                    <option value ="0">否</option>
+                    <option value ="1">是</option>
+                 </select>
+            </div>
+        </div>
+    </div>
+</div>
+    <button type="button" class="btn-primary btn-lg registerBtn" style="margin-left: 15%;margin-top: 50px" onclick=trade()>交易</button>
+</div>
+</body>
+<script src="./web3.js"></script>
+<script>
+    let Web3 = require('web3');
+let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+//导入合约的ABI文件
+let abi = JSON.parse('[{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"fReceipt","type":"uint256"}],"name":"financing","outputs":[{"name":"","type":"int256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"companyAddr","type":"address"},{"name":"companyid","type":"uint256"},{"name":"companyName","type":"string"},{"name":"comattr","type":"uint256"},{"name":"ba","type":"uint256"}],"name":"giveRightToCom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"recID","type":"uint256"},{"name":"supplier","type":"address"},{"name":"mount","type":"uint256"},{"name":"stat","type":"bool"},{"name":"_signTime","type":"string"},{"name":"_expiredTime","type":"string"}],"name":"purchase","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"mount","type":"uint256"},{"name":"oldSellID","type":"uint256"},{"name":"oldPurID","type":"uint256"},{"name":"newID","type":"uint256"},{"name":"transTime","type":"string"}],"name":"receiptTrans","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"sReceipt","type":"uint256"},{"name":"timeN","type":"string"}],"name":"settle","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"companies","outputs":[{"name":"ID","type":"uint256"},{"name":"name","type":"string"},{"name":"attr","type":"uint256"},{"name":"balance","type":"uint256"},{"name":"credit","type":"int256"}],"payable":false,"stateMutability":"view","type":"function"}]');
+let SContract = web3.eth.contract(abi);
+
+let contractInstance = SContract.at('0xF1fEE55b2451E076533af55f363772a3624786eE');
+
+async function trade(){
+    var ReceiptID = $("#ReceiptID").val();
+    var comAddr=$("#ComAddr").val();
+    var SellerAddr = $("#SellerAddr").val();
+    var SellTime = $("#SellTime").val();
+    var ExpireTime = $("#ExpireTime").val();
+    var money = $("#money").val();
+    var status = $("#status").val();
+    if(ReceiptID == ""){
+        alert("Trade Failed!");
+        return;
+    }
+    if(comAddr == ""){
+        alert("Trade Failed!");
+        return;
+    }
+    if(SellerAddr == ""){
+        alert("Trade Failed!");
+        return;
+    }
+    if(SellTime == ""){
+        alert("Trade Failed!");
+        return;
+    }
+    if(ExpireTime == ""){
+        alert("Trade Failed!");
+        return;
+    }
+    if(money == ""){
+        alert("Trade Failed!");
+        return;
+    }
+
+   
+   var purc=contractInstance.purchase.sendTransaction($("#ReceiptID").val(), $("#SellerAddr").val(),$("#money").val(),$("#status").val(),$("#SellTime").val(),$("#ExpireTime").val(),{from:$("#ComAddr").val(),gas:1000000});
+   //var purc=contractInstance.purchase.sendTransaction(11, '0xda3cb6cafed3edea36dba98dc1a56b2d847fab1d',10,1,'1','2',{from:'0x89a8e6f2b85291a651121819487872381f927853',gas:1000000});
+   alert("Purchase successfully");
+//alert(purc);
+    
+}
+</script>
+</html>

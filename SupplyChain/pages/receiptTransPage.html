@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Receipt Transfer Page</title>
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<h1 style="padding-top:10px;padding-bottom:10px; color: rgb(40, 40, 40);"> Supply Chain Financing System</h1>
+
+<div>
+    <div class="container">
+        <h1>单据转让</h1>
+        <div class="" style="margin-top: 10px;margin-left: 1%">
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="ComAddr">转让方公钥</label>
+                <input type="text" class="form-control inputSize" id="ComAddr" placeholder="Company Addr">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="OldSellID">转出账单ID(卖方)</label>
+                <input type="text" class="form-control inputSize" id="OldSellID" placeholder="oldSell id">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="OldPurID">转出账单ID(买方)</label>
+                <input type="text" class="form-control inputSize" id="OldPurID" placeholder="oldPur id">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="newID">新账单ID</label>
+                <input type="text" class="form-control inputSize" id="newID" placeholder="new id">
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="money">交易金额</label>
+                <input type="text" class="form-control inputSize" id="money" placeholder="money">
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <label class="registerLabel" for="transferTime">转出时间</label>
+                <input type="text" class="form-control inputSize" id="transferTime" placeholder="transfer time">
+            </div>
+        </div>
+    </div>
+
+    </div>
+    <button type="button" class="btn-primary btn-lg registerBtn" style="margin-left: 15%;margin-top: 50px" onclick=transfer()>转让</button>
+</div>
+</body>
+<script src="./web3.js"></script>
+<script>
+    let Web3 = require('web3');
+let web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+//导入合约的ABI文件
+let abi = JSON.parse('[{"constant":false,"inputs":[{"name":"receiver","type":"address"},{"name":"fReceipt","type":"uint256"}],"name":"financing","outputs":[{"name":"","type":"int256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[],"name":"getBalance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"companyAddr","type":"address"},{"name":"companyid","type":"uint256"},{"name":"companyName","type":"string"},{"name":"comattr","type":"uint256"},{"name":"ba","type":"uint256"}],"name":"giveRightToCom","outputs":[{"name":"","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"recID","type":"uint256"},{"name":"supplier","type":"address"},{"name":"mount","type":"uint256"},{"name":"stat","type":"bool"},{"name":"_signTime","type":"string"},{"name":"_expiredTime","type":"string"}],"name":"purchase","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"mount","type":"uint256"},{"name":"oldSellID","type":"uint256"},{"name":"oldPurID","type":"uint256"},{"name":"newID","type":"uint256"},{"name":"transTime","type":"string"}],"name":"receiptTrans","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"},{"name":"","type":"uint256"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"sReceipt","type":"uint256"},{"name":"timeN","type":"string"}],"name":"settle","outputs":[{"name":"","type":"bool"},{"name":"","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"companies","outputs":[{"name":"ID","type":"uint256"},{"name":"name","type":"string"},{"name":"attr","type":"uint256"},{"name":"balance","type":"uint256"},{"name":"credit","type":"int256"}],"payable":false,"stateMutability":"view","type":"function"}]');
+let SContract = web3.eth.contract(abi);
+
+let contractInstance = SContract.at('0xF1fEE55b2451E076533af55f363772a3624786eE');
+
+async function transfer(){
+    var comAddr=$("#ComAddr").val();
+    var OldSellID = $("#OldSellID").val();
+    var OldPurID = $("#OldPurID").val();
+    var newID = $("#newID").val();
+    var money = $("#money").val();
+    var transferTime = $("#transferTime").val();
+    if(OldSellID == ""){
+        alert("Transfer Failed!");
+        return;
+    }
+    if(newID == ""){
+        alert("Transfer Failed!");
+        return;
+    }
+    if(comAddr == ""){
+        alert("Transfer Failed!");
+        return;
+    }
+    if(money == ""){
+        alert("Transfer Failed!");
+        return;
+    }
+    if(transferTime == ""){
+        alert("Transfer Failed!");
+        return;
+    }
+    var purc=contractInstance.receiptTrans.sendTransaction($("#money").val(), $("#OldSellID").val(),$("#OldPurID").val(),$("#newID").val(),$("#SellTime").val(),$("#transferTime").val(),{from:$("#ComAddr").val(),gas:1000000});
+    alert("Transfer Receipt Successfully");
+  
+
+
+
+
+    
+}
+</script>
+</html>

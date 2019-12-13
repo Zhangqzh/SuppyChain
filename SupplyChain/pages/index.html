@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head> 
+    <meta charset="utf-8"> 
+    <title>supply chain</title> 
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css" >
+    <script src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
+    
+</head>
+  
+
+<body style="background-image: url(../images/background.jpg); opacity: 1;">
+  
+    <h1 style="padding-top:10px;padding-bottom:10px; color: rgb(41, 40, 39);"> Supply Chain Financing System</h1>
+ 
+        <div style="margin-top: 15%;margin-left: 20%;">
+            <button type="button" class="btn-primary btn-lg registerBtn" onclick="registerPage()">企业注册</button>
+
+            <button type="button" class="btn-primary btn-lg registerBtn" onclick="TradePage()">签发单据</button>
+
+            <button type="button" class="btn-primary btn-lg registerBtn" onclick="receiptTransPage()">单据转让</button>
+
+            <button type="button" class="btn-primary btn-lg registerBtn" onclick="getBalancePage()">余额查询</button>
+
+            <button type="button" class="btn-primary btn-lg registerBtn" onclick="payDebtPage()">企业还款</button>
+
+            <button type="button" class="btn-primary btn-lg registerBtn" onclick="FinancePage()">银行融资</button>
+
+
+        </div>
+    
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+        function FinancePage(){
+            window.location.href = "Finance.html";
+        }
+        function registerPage(){
+            window.location.href = "registerPage.html";
+        }
+        function TradePage(){
+            window.location.href = "TradePage.html";
+        }
+        function receiptTransPage(){
+            window.location.href = "receiptTransPage.html";
+        }
+        function getBalancePage(){
+            window.location.href = "getBalancePage.html";
+        }
+        function payDebtPage(){
+            window.location.href = "payDebt.html";
+        }
+        
+        
+    </script>
+
+</body>
+</html>
